@@ -129,6 +129,7 @@ func (s *OauthQq) GetAccessToken(code string) (*OauthToken, error) {
 
 	//获取api响应数据
 	resp, err := glib.HttpGet(s.AccessTokenUri, queryString)
+
 	if err == nil {
 		//响应数据解析
 		accessToken, refreshToken, expiresIn := ParseAccessTokenForQq(resp)
@@ -147,6 +148,12 @@ func (s *OauthQq) GetAccessToken(code string) (*OauthToken, error) {
 	}
 
 	return oauthToken, err
+}
+/**
+ * 无用的接口数据
+ */
+func (s *OauthQq) GetGlobalAccessToken() (*AccessToken, error) {
+	return &AccessToken{},nil
 }
 
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -200,6 +207,7 @@ func (s *OauthQq) GetOpenId(accessToken string) (string, error) {
  * 获取用户信息
  * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 func (s *OauthQq) GetUserInfo(accessToken, openId string) (*OauthUser, error) {
+
 	var oauthUser *OauthUser
 	params := map[string]interface{}{
 		"oauth_consumer_key": s.ClientId,
@@ -226,13 +234,13 @@ func (s *OauthQq) GetUserInfo(accessToken, openId string) (*OauthUser, error) {
 			}
 			oauthUser.Avatar = avatar
 
-			sex := "secret"
+			var sex uint8
 			if response.Gender == "男" {
-				sex = "male"
+				sex = 1
 			} else if response.Gender == "女" {
-				sex = "female"
+				sex = 2
 			}
-
+			oauthUser.OpenId = openId
 			oauthUser.Sex = sex
 			oauthUser.Year = response.Year
 			oauthUser.Province = response.Province

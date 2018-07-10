@@ -23,6 +23,7 @@ type (
 
 		GetAuthorizeUrl(args ...string) string
 		GetAccessToken(code string) (*OauthToken, error)
+		GetGlobalAccessToken()(*AccessToken, error)
 		RefreshAccessToken(refreshToken string) (*OauthToken, error)
 		GetUserInfo(accessToken, openId string) (*OauthUser, error)
 	}
@@ -34,6 +35,7 @@ type (
 
 		AuthorizeCodeUri string //请求code地址
 		AccessTokenUri   string //请求access_token地址
+		AccessTokenGlobleUri   string //请求access_token地址
 		RefreshTokenUri  string //请求refresh_token地址
 		OpenIdUri        string //请求open_id地址
 		UserInfoUri      string //请求用户信息地址
@@ -47,15 +49,20 @@ type (
 		ExpiresIn    int
 		Scope        string
 	}
+	AccessToken struct {
+		AccessToken  string
+		ExpiresIn    int
+	}
 
 	OauthUser struct {
 		Avatar   string
+		OpenId string
 		Nickname string
-		Sex      string
+		Sex      uint8
 		Year     string
 		Province string
 		City     string
-
+		Subscribe int
 		Token *OauthToken
 	}
 )
